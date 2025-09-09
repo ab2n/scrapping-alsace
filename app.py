@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from io import BytesIO
 
 st.title("Scraping des élus des cantons alsaciens")
 
@@ -58,6 +59,16 @@ if st.button("Lancer le scraping"):
         df = pd.DataFrame(data)
         st.dataframe(df)
 
+        # Export en Excel
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine="openpyxl") as writer:
+            df.to_excel(writer, index=False, sheet_name="Élus")
+        st.download_button(
+            label="📥 Télécharger en Excel",
+            data=output.getvalue(),
+            file_name="elus_cantons.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
     except Exception as e:
         st.error(f"Erreur lors du scraping : {e}")
-
