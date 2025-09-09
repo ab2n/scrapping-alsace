@@ -1,3 +1,4 @@
 pandas
 streamlit
 bs4
+openpyxl
