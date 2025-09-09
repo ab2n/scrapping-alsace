@@ -35,7 +35,10 @@ if st.button("Lancer le scraping"):
             if line.startswith("Canton de"):
                 # Sauvegarde du canton précédent
                 if current_canton and current_names:
-                    data.append({"Canton": current_canton, "Élus": ", ".join(current_names)})
+                    row = {"Canton": current_canton}
+                    for i, name in enumerate(current_names, start=1):
+                        row[f"Élu {i}"] = name
+                    data.append(row)
                 current_canton = line
                 current_names = []
             elif line not in blacklist and current_canton:
@@ -46,7 +49,10 @@ if st.button("Lancer le scraping"):
 
         # Sauvegarde du dernier canton
         if current_canton and current_names:
-            data.append({"Canton": current_canton, "Élus": ", ".join(current_names)})
+            row = {"Canton": current_canton}
+            for i, name in enumerate(current_names, start=1):
+                row[f"Élu {i}"] = name
+            data.append(row)
 
         # Affichage dans un tableau
         df = pd.DataFrame(data)
@@ -54,3 +60,4 @@ if st.button("Lancer le scraping"):
 
     except Exception as e:
         st.error(f"Erreur lors du scraping : {e}")
+
